@@ -3,9 +3,11 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Icon from '@/components/ui/icon';
 
 interface CharacterData {
+  id: string;
   name: string;
   description: string;
   height: string;
@@ -24,7 +26,10 @@ interface CharacterData {
 }
 
 const Index = () => {
+  const [characters, setCharacters] = useState<CharacterData[]>([]);
+  const [currentCharacterId, setCurrentCharacterId] = useState<string>('');
   const [character, setCharacter] = useState<CharacterData>({
+    id: '',
     name: '',
     description: '',
     height: '',
@@ -43,16 +48,93 @@ const Index = () => {
   });
 
   useEffect(() => {
-    const saved = localStorage.getItem('rpg-character');
+    const saved = localStorage.getItem('rpg-characters');
     if (saved) {
-      setCharacter(JSON.parse(saved));
+      const loadedCharacters = JSON.parse(saved);
+      setCharacters(loadedCharacters);
+      if (loadedCharacters.length > 0) {
+        setCurrentCharacterId(loadedCharacters[0].id);
+        setCharacter(loadedCharacters[0]);
+      }
+    } else {
+      const newChar = {
+        id: Date.now().toString(),
+        name: '',
+        description: '',
+        height: '',
+        weight: '',
+        hp: '',
+        armorClass: '',
+        combat: '',
+        perception: '',
+        intelligence: '',
+        constitution: '',
+        dexterity: '',
+        magic: '',
+        spells: '',
+        inventory: '',
+        photo: ''
+      };
+      setCharacters([newChar]);
+      setCurrentCharacterId(newChar.id);
+      setCharacter(newChar);
+      localStorage.setItem('rpg-characters', JSON.stringify([newChar]));
     }
   }, []);
 
   const updateField = (field: keyof CharacterData, value: string) => {
     const updated = { ...character, [field]: value };
     setCharacter(updated);
-    localStorage.setItem('rpg-character', JSON.stringify(updated));
+    
+    const updatedCharacters = characters.map(char => 
+      char.id === currentCharacterId ? updated : char
+    );
+    setCharacters(updatedCharacters);
+    localStorage.setItem('rpg-characters', JSON.stringify(updatedCharacters));
+  };
+
+  const switchCharacter = (id: string) => {
+    const selectedChar = characters.find(char => char.id === id);
+    if (selectedChar) {
+      setCurrentCharacterId(id);
+      setCharacter(selectedChar);
+    }
+  };
+
+  const createNewCharacter = () => {
+    const newChar: CharacterData = {
+      id: Date.now().toString(),
+      name: 'Новый персонаж',
+      description: '',
+      height: '',
+      weight: '',
+      hp: '',
+      armorClass: '',
+      combat: '',
+      perception: '',
+      intelligence: '',
+      constitution: '',
+      dexterity: '',
+      magic: '',
+      spells: '',
+      inventory: '',
+      photo: ''
+    };
+    const updatedCharacters = [...characters, newChar];
+    setCharacters(updatedCharacters);
+    setCurrentCharacterId(newChar.id);
+    setCharacter(newChar);
+    localStorage.setItem('rpg-characters', JSON.stringify(updatedCharacters));
+  };
+
+  const deleteCharacter = () => {
+    if (characters.length <= 1) return;
+    
+    const updatedCharacters = characters.filter(char => char.id !== currentCharacterId);
+    setCharacters(updatedCharacters);
+    setCurrentCharacterId(updatedCharacters[0].id);
+    setCharacter(updatedCharacters[0]);
+    localStorage.setItem('rpg-characters', JSON.stringify(updatedCharacters));
   };
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,13 +153,76 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-100 via-orange-50 to-amber-200 p-4 md:p-8">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-amber-100 via-orange-50 to-amber-200 p-4 md:p-8 relative overflow-hidden">
+      <div className="absolute inset-0 opacity-10 pointer-events-none" style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 10 L90 50 L50 90 L10 50 Z' fill='none' stroke='%238B4513' stroke-width='2'/%3E%3Ccircle cx='50' cy='50' r='5' fill='%238B4513'/%3E%3C/svg%3E")`,
+        backgroundSize: '80px 80px'
+      }}></div>
+      
+      <div className="absolute top-10 left-10 opacity-20 text-[120px] text-[#8B4513] select-none pointer-events-none">⚔️</div>
+      <div className="absolute top-40 right-20 opacity-15 text-[100px] text-[#8B4513] select-none pointer-events-none">🛡️</div>
+      <div className="absolute bottom-20 left-20 opacity-20 text-[90px] text-[#8B4513] select-none pointer-events-none">🏰</div>
+      <div className="absolute bottom-40 right-10 opacity-15 text-[110px] text-[#8B4513] select-none pointer-events-none">📜</div>
+      <div className="absolute top-1/2 left-1/4 opacity-10 text-[80px] text-[#8B4513] select-none pointer-events-none">🗡️</div>
+      <div className="absolute top-1/3 right-1/3 opacity-10 text-[95px] text-[#8B4513] select-none pointer-events-none">🔮</div>
+
+      <div className="max-w-6xl mx-auto relative z-10">
+        <div className="mb-6 flex gap-4 items-center print:hidden">
+          <Select value={currentCharacterId} onValueChange={switchCharacter}>
+            <SelectTrigger className="w-64 dnd-field bg-gradient-to-br from-amber-100 to-amber-50 border-2 border-[#8B4513] font-semibold">
+              <SelectValue placeholder="Выберите персонажа" />
+            </SelectTrigger>
+            <SelectContent>
+              {characters.map(char => (
+                <SelectItem key={char.id} value={char.id}>
+                  {char.name || 'Безымянный персонаж'}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          
+          <button
+            onClick={createNewCharacter}
+            className="dnd-field bg-gradient-to-br from-green-100 to-green-50 p-1 shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            <div className="dnd-field bg-gradient-to-br from-white to-green-50 px-4 py-2 flex items-center gap-2">
+              <Icon name="Plus" size={18} className="text-green-700" />
+              <span className="font-semibold text-green-700">Новый</span>
+            </div>
+          </button>
+          
+          {characters.length > 1 && (
+            <button
+              onClick={deleteCharacter}
+              className="dnd-field bg-gradient-to-br from-red-100 to-red-50 p-1 shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              <div className="dnd-field bg-gradient-to-br from-white to-red-50 px-4 py-2 flex items-center gap-2">
+                <Icon name="Trash2" size={18} className="text-red-700" />
+                <span className="font-semibold text-red-700">Удалить</span>
+              </div>
+            </button>
+          )}
+        </div>
+
         <Card className="bg-[#F4E8D0] border-4 border-[#8B4513] shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-16 h-16 border-t-4 border-l-4 border-[#D4AF37]"></div>
-          <div className="absolute top-0 right-0 w-16 h-16 border-t-4 border-r-4 border-[#D4AF37]"></div>
-          <div className="absolute bottom-0 left-0 w-16 h-16 border-b-4 border-l-4 border-[#D4AF37]"></div>
-          <div className="absolute bottom-0 right-0 w-16 h-16 border-b-4 border-r-4 border-[#D4AF37]"></div>
+          <div className="absolute inset-0 opacity-5 pointer-events-none" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='50' y='100' font-size='160' opacity='0.3' fill='%238B4513'%3E⚔%3C/text%3E%3C/svg%3E")`,
+            backgroundSize: '400px 400px',
+            backgroundPosition: 'center'
+          }}></div>
+
+          <div className="absolute top-0 left-0 w-20 h-20 border-t-4 border-l-4 border-[#D4AF37]">
+            <div className="absolute -top-2 -left-2 text-3xl">⚜️</div>
+          </div>
+          <div className="absolute top-0 right-0 w-20 h-20 border-t-4 border-r-4 border-[#D4AF37]">
+            <div className="absolute -top-2 -right-2 text-3xl">⚜️</div>
+          </div>
+          <div className="absolute bottom-0 left-0 w-20 h-20 border-b-4 border-l-4 border-[#D4AF37]">
+            <div className="absolute -bottom-2 -left-2 text-3xl">⚜️</div>
+          </div>
+          <div className="absolute bottom-0 right-0 w-20 h-20 border-b-4 border-r-4 border-[#D4AF37]">
+            <div className="absolute -bottom-2 -right-2 text-3xl">⚜️</div>
+          </div>
           
           <div className="p-8 md:p-12">
             <div className="flex justify-between items-center mb-8">
