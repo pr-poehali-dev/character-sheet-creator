@@ -20,6 +20,7 @@ interface CharacterData {
   constitution: string;
   dexterity: string;
   magic: string;
+  magicType: string;
   spells: string;
   inventory: string;
   photo: string;
@@ -42,6 +43,7 @@ const Index = () => {
     constitution: '',
     dexterity: '',
     magic: '',
+    magicType: '',
     spells: '',
     inventory: '',
     photo: ''
@@ -71,6 +73,7 @@ const Index = () => {
         constitution: '',
         dexterity: '',
         magic: '',
+        magicType: '',
         spells: '',
         inventory: '',
         photo: ''
@@ -116,6 +119,7 @@ const Index = () => {
       constitution: '',
       dexterity: '',
       magic: '',
+      magicType: '',
       spells: '',
       inventory: '',
       photo: ''
@@ -240,8 +244,8 @@ const Index = () => {
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="md:col-span-2 space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="md:col-span-2 space-y-4">
                 <div className="relative">
                   <Label htmlFor="name" className="text-lg font-semibold text-[#3E2723] mb-2 block">Имя персонажа</Label>
                   <div className="relative dnd-banner bg-gradient-to-br from-amber-100 to-amber-50 p-1 shadow-lg">
@@ -256,14 +260,14 @@ const Index = () => {
                 </div>
 
                 <div className="relative">
-                  <Label htmlFor="description" className="text-lg font-semibold text-[#3E2723] mb-2 block">Описание внешности</Label>
+                  <Label htmlFor="description" className="text-base font-semibold text-[#3E2723] mb-2 block">Описание внешности</Label>
                   <div className="relative dnd-field bg-gradient-to-br from-amber-100 to-amber-50 p-1 shadow-lg">
                     <Textarea
                       id="description"
                       value={character.description}
                       onChange={(e) => updateField('description', e.target.value)}
-                      className="dnd-field bg-gradient-to-br from-amber-50 to-white border-0 mt-2 min-h-24 shadow-inner focus:shadow-lg transition-all duration-300 focus:ring-0 px-5 py-4 leading-relaxed"
-                      placeholder="Опишите внешность персонажа"
+                      className="dnd-field bg-gradient-to-br from-amber-50 to-white border-0 min-h-16 shadow-inner focus:shadow-lg transition-all duration-300 focus:ring-0 px-4 py-2 leading-relaxed text-sm"
+                      placeholder="Краткое описание"
                     />
                   </div>
                 </div>
@@ -316,131 +320,140 @@ const Index = () => {
               </div>
             </div>
 
-            <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-6">
-              <div className="relative p-6 flex flex-col items-center">
-                <Label htmlFor="hp" className="text-sm font-semibold text-[#3E2723] flex items-center gap-2 mb-4">
-                  <Icon name="Heart" size={18} className="text-red-600" />
+            <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="relative p-3 flex flex-col items-center">
+                <Label htmlFor="hp" className="text-xs font-semibold text-[#3E2723] flex items-center gap-1 mb-2">
+                  <Icon name="Heart" size={16} className="text-red-600" />
                   HP
                 </Label>
-                <div className="dnd-shield bg-gradient-to-br from-red-100 to-red-50 p-1.5 shadow-xl w-28 h-28 flex items-center justify-center">
+                <div className="dnd-shield bg-gradient-to-br from-red-100 to-red-50 p-1.5 shadow-xl w-24 h-24 flex items-center justify-center">
                   <Input
                     id="hp"
                     value={character.hp}
                     onChange={(e) => updateField('hp', e.target.value)}
-                    className="dnd-shield bg-white/95 border-0 text-center text-2xl font-bold shadow-inner focus:ring-0 w-full h-full"
+                    className="dnd-shield bg-white/95 border-0 text-center text-xl font-bold shadow-inner focus:ring-0 w-full h-full"
                     placeholder="0"
                   />
                 </div>
               </div>
 
-              <div className="relative p-6 flex flex-col items-center">
-                <Label htmlFor="armorClass" className="text-sm font-semibold text-[#3E2723] flex items-center gap-2 mb-4">
-                  <Icon name="Shield" size={18} className="text-blue-600" />
+              <div className="relative p-3 flex flex-col items-center">
+                <Label htmlFor="armorClass" className="text-xs font-semibold text-[#3E2723] flex items-center gap-1 mb-2">
+                  <Icon name="Shield" size={16} className="text-blue-600" />
                   Защита
                 </Label>
-                <div className="dnd-shield bg-gradient-to-br from-blue-100 to-blue-50 p-1.5 shadow-xl w-28 h-28 flex items-center justify-center">
+                <div className="dnd-shield bg-gradient-to-br from-blue-100 to-blue-50 p-1.5 shadow-xl w-24 h-24 flex items-center justify-center">
                   <Input
                     id="armorClass"
                     value={character.armorClass}
                     onChange={(e) => updateField('armorClass', e.target.value)}
-                    className="dnd-shield bg-white/95 border-0 text-center text-2xl font-bold shadow-inner focus:ring-0 w-full h-full"
+                    className="dnd-shield bg-white/95 border-0 text-center text-xl font-bold shadow-inner focus:ring-0 w-full h-full"
                     placeholder="0"
                   />
                 </div>
               </div>
 
-              <div className="relative p-6 flex flex-col items-center">
-                <Label htmlFor="combat" className="text-sm font-semibold text-[#3E2723] flex items-center gap-2 mb-4">
-                  <Icon name="Sword" size={18} className="text-orange-600" />
+              <div className="relative p-3 flex flex-col items-center">
+                <Label htmlFor="combat" className="text-xs font-semibold text-[#3E2723] flex items-center gap-1 mb-2">
+                  <Icon name="Sword" size={16} className="text-orange-600" />
                   Бой
                 </Label>
-                <div className="dnd-stat-hexagon bg-gradient-to-br from-orange-100 to-orange-50 p-1.5 shadow-xl w-24 h-24 flex items-center justify-center">
+                <div className="dnd-stat-hexagon bg-gradient-to-br from-orange-100 to-orange-50 p-1.5 shadow-xl w-20 h-20 flex items-center justify-center">
                   <Input
                     id="combat"
                     value={character.combat}
                     onChange={(e) => updateField('combat', e.target.value)}
-                    className="dnd-stat-hexagon bg-white/95 border-0 text-center text-2xl font-bold shadow-inner focus:ring-0 w-full h-full"
+                    className="dnd-stat-hexagon bg-white/95 border-0 text-center text-xl font-bold shadow-inner focus:ring-0 w-full h-full"
                     placeholder="0"
                   />
                 </div>
               </div>
 
-              <div className="relative p-6 flex flex-col items-center">
-                <Label htmlFor="perception" className="text-sm font-semibold text-[#3E2723] flex items-center gap-2 mb-4">
-                  <Icon name="Eye" size={18} className="text-purple-600" />
+              <div className="relative p-3 flex flex-col items-center">
+                <Label htmlFor="perception" className="text-xs font-semibold text-[#3E2723] flex items-center gap-1 mb-2">
+                  <Icon name="Eye" size={16} className="text-purple-600" />
                   Восприятие
                 </Label>
-                <div className="dnd-stat-hexagon bg-gradient-to-br from-purple-100 to-purple-50 p-1.5 shadow-xl w-24 h-24 flex items-center justify-center">
+                <div className="dnd-stat-hexagon bg-gradient-to-br from-purple-100 to-purple-50 p-1.5 shadow-xl w-20 h-20 flex items-center justify-center">
                   <Input
                     id="perception"
                     value={character.perception}
                     onChange={(e) => updateField('perception', e.target.value)}
-                    className="dnd-stat-hexagon bg-white/95 border-0 text-center text-2xl font-bold shadow-inner focus:ring-0 w-full h-full"
+                    className="dnd-stat-hexagon bg-white/95 border-0 text-center text-xl font-bold shadow-inner focus:ring-0 w-full h-full"
                     placeholder="0"
                   />
                 </div>
               </div>
 
-              <div className="relative p-6 flex flex-col items-center">
-                <Label htmlFor="intelligence" className="text-sm font-semibold text-[#3E2723] flex items-center gap-2 mb-4">
-                  <Icon name="Brain" size={18} className="text-indigo-600" />
+              <div className="relative p-3 flex flex-col items-center">
+                <Label htmlFor="intelligence" className="text-xs font-semibold text-[#3E2723] flex items-center gap-1 mb-2">
+                  <Icon name="Brain" size={16} className="text-indigo-600" />
                   Интеллект
                 </Label>
-                <div className="dnd-stat-hexagon bg-gradient-to-br from-indigo-100 to-indigo-50 p-1.5 shadow-xl w-24 h-24 flex items-center justify-center">
+                <div className="dnd-stat-hexagon bg-gradient-to-br from-indigo-100 to-indigo-50 p-1.5 shadow-xl w-20 h-20 flex items-center justify-center">
                   <Input
                     id="intelligence"
                     value={character.intelligence}
                     onChange={(e) => updateField('intelligence', e.target.value)}
-                    className="dnd-stat-hexagon bg-white/95 border-0 text-center text-2xl font-bold shadow-inner focus:ring-0 w-full h-full"
+                    className="dnd-stat-hexagon bg-white/95 border-0 text-center text-xl font-bold shadow-inner focus:ring-0 w-full h-full"
                     placeholder="0"
                   />
                 </div>
               </div>
 
-              <div className="relative p-6 flex flex-col items-center">
-                <Label htmlFor="constitution" className="text-sm font-semibold text-[#3E2723] flex items-center gap-2 mb-4">
-                  <Icon name="Dumbbell" size={18} className="text-green-600" />
+              <div className="relative p-3 flex flex-col items-center">
+                <Label htmlFor="constitution" className="text-xs font-semibold text-[#3E2723] flex items-center gap-1 mb-2">
+                  <Icon name="Dumbbell" size={16} className="text-green-600" />
                   Телосложение
                 </Label>
-                <div className="dnd-stat-hexagon bg-gradient-to-br from-green-100 to-green-50 p-1.5 shadow-xl w-24 h-24 flex items-center justify-center">
+                <div className="dnd-stat-hexagon bg-gradient-to-br from-green-100 to-green-50 p-1.5 shadow-xl w-20 h-20 flex items-center justify-center">
                   <Input
                     id="constitution"
                     value={character.constitution}
                     onChange={(e) => updateField('constitution', e.target.value)}
-                    className="dnd-stat-hexagon bg-white/95 border-0 text-center text-2xl font-bold shadow-inner focus:ring-0 w-full h-full"
+                    className="dnd-stat-hexagon bg-white/95 border-0 text-center text-xl font-bold shadow-inner focus:ring-0 w-full h-full"
                     placeholder="0"
                   />
                 </div>
               </div>
 
-              <div className="relative p-6 flex flex-col items-center">
-                <Label htmlFor="dexterity" className="text-sm font-semibold text-[#3E2723] flex items-center gap-2 mb-4">
-                  <Icon name="Zap" size={18} className="text-yellow-600" />
+              <div className="relative p-3 flex flex-col items-center">
+                <Label htmlFor="dexterity" className="text-xs font-semibold text-[#3E2723] flex items-center gap-1 mb-2">
+                  <Icon name="Zap" size={16} className="text-yellow-600" />
                   Ловкость
                 </Label>
-                <div className="dnd-stat-hexagon bg-gradient-to-br from-yellow-100 to-yellow-50 p-1.5 shadow-xl w-24 h-24 flex items-center justify-center">
+                <div className="dnd-stat-hexagon bg-gradient-to-br from-yellow-100 to-yellow-50 p-1.5 shadow-xl w-20 h-20 flex items-center justify-center">
                   <Input
                     id="dexterity"
                     value={character.dexterity}
                     onChange={(e) => updateField('dexterity', e.target.value)}
-                    className="dnd-stat-hexagon bg-white/95 border-0 text-center text-2xl font-bold shadow-inner focus:ring-0 w-full h-full"
+                    className="dnd-stat-hexagon bg-white/95 border-0 text-center text-xl font-bold shadow-inner focus:ring-0 w-full h-full"
                     placeholder="0"
                   />
                 </div>
               </div>
 
-              <div className="relative p-6 flex flex-col items-center">
-                <Label htmlFor="magic" className="text-sm font-semibold text-[#3E2723] flex items-center gap-2 mb-4">
-                  <Icon name="Sparkles" size={18} className="text-violet-600" />
+              <div className="relative p-3 flex flex-col items-center gap-2">
+                <Label htmlFor="magic" className="text-xs font-semibold text-[#3E2723] flex items-center gap-1">
+                  <Icon name="Sparkles" size={16} className="text-violet-600" />
                   Магия
                 </Label>
-                <div className="dnd-stat-hexagon bg-gradient-to-br from-violet-100 to-violet-50 p-1.5 shadow-xl w-24 h-24 flex items-center justify-center">
+                <div className="dnd-stat-hexagon bg-gradient-to-br from-violet-100 to-violet-50 p-1.5 shadow-xl w-20 h-20 flex items-center justify-center">
                   <Input
                     id="magic"
                     value={character.magic}
                     onChange={(e) => updateField('magic', e.target.value)}
-                    className="dnd-stat-hexagon bg-white/95 border-0 text-center text-2xl font-bold shadow-inner focus:ring-0 w-full h-full"
+                    className="dnd-stat-hexagon bg-white/95 border-0 text-center text-xl font-bold shadow-inner focus:ring-0 w-full h-full"
                     placeholder="0"
+                  />
+                </div>
+                <div className="w-full">
+                  <Input
+                    id="magicType"
+                    value={character.magicType}
+                    onChange={(e) => updateField('magicType', e.target.value)}
+                    className="dnd-field bg-gradient-to-br from-violet-50 to-white border-0 text-center text-xs shadow-inner focus:ring-0 px-2 py-1"
+                    placeholder="Тип магии"
                   />
                 </div>
               </div>
