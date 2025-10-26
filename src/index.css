@@ -111,3 +111,67 @@
     font-family: "Cinzel", serif;
   }
 }
+
+@layer components {
+  .dnd-field {
+    clip-path: polygon(
+      0% 8px,
+      8px 0%,
+      calc(100% - 8px) 0%,
+      100% 8px,
+      100% calc(100% - 8px),
+      calc(100% - 8px) 100%,
+      8px 100%,
+      0% calc(100% - 8px)
+    );
+  }
+
+  .dnd-stat-hexagon {
+    clip-path: polygon(
+      30% 0%,
+      70% 0%,
+      100% 30%,
+      100% 70%,
+      70% 100%,
+      30% 100%,
+      0% 70%,
+      0% 30%
+    );
+  }
+
+  .dnd-shield {
+    clip-path: polygon(
+      50% 0%,
+      95% 20%,
+      100% 55%,
+      85% 90%,
+      50% 100%,
+      15% 90%,
+      0% 55%,
+      5% 20%
+    );
+  }
+
+  .dnd-banner {
+    clip-path: polygon(0% 0%, 100% 0%, 95% 75%, 50% 100%, 5% 75%);
+  }
+}
+
+@media print {
+  @page {
+    margin: 1cm;
+  }
+
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .print\:hidden {
+    display: none !important;
+  }
+
+  input[type="file"] {
+    display: none !important;
+  }
+}
